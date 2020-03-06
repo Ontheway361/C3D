@@ -33,7 +33,15 @@ class PathSet(object):
     def model_dir(model_name = 'C3D', cur_epochs = 0):
         ''' get the root path of video_understanding '''
 
-        save_dir = os.path.join(root_dir, 'saved_model/saved_c3d_models', model_name + '_epoch-' + str(cur_epochs - 1) + '.pth.tar')
+        folder = None
+        if model_name == 'C3D':
+            folder = 'saved_c3d_models'
+        elif model_name == 'P3D':
+            folder = 'saved_p3d_models'
+        else:
+            raise TypeError('unknown model name ...')
+
+        save_dir = os.path.join(root_dir, 'saved_model/' + folder, model_name + '_epoch-' + str(cur_epochs - 1) + '.pth.tar')
         return save_dir
 
 
@@ -57,10 +65,18 @@ class PathSet(object):
 
 
     @staticmethod
-    def pretrained_model_dir():
+    def pretrained_model_dir(model_name = 'C3D'):
         ''' get the dir of pretrained model '''
 
-        pretrained_dir = root_dir + '/saved_model/pretrained_model/c3d_pretrained.pth'
+        pretrained_model = None
+        if model_name == 'C3D':
+            pretrained_model = 'c3d_pretrained.pth'
+        elif model_name == 'P3D':
+            pretrained_model = 'p3d_pretrained.pth'
+        else:
+            raise TypeError('unknown model name')
+
+        pretrained_dir = root_dir + '/saved_model/pretrained_model/' + pretrained_model
         return pretrained_dir
 
 

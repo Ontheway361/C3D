@@ -7,7 +7,9 @@ author: lujie
 
 import torch
 import torch.nn as nn
-from utils.path_utils import PathSet
+from thop import profile
+# from utils.path_utils import PathSet
+from IPython import embed
 
 class C3D(nn.Module):
     ''' The C3D network '''
@@ -43,8 +45,8 @@ class C3D(nn.Module):
 
         self.__init_weight()
 
-        if pretrained:
-            self.__load_pretrained_weights()
+        # if pretrained:
+        #     self.__load_pretrained_weights()
 
 
     def forward(self, x):
@@ -66,7 +68,7 @@ class C3D(nn.Module):
         x = self.relu(self.conv5a(x))
         x = self.relu(self.conv5b(x))
         x = self.pool5(x)
-
+        embed()
         x = x.view(-1, 8192)
         x = self.relu(self.fc6(x))
         x = self.dropout(x)
@@ -77,9 +79,8 @@ class C3D(nn.Module):
 
         return logits
 
-
+    '''
     def __load_pretrained_weights(self):
-        ''' Initialiaze network '''
 
         corresp_name = {
                         # Conv1
@@ -121,6 +122,7 @@ class C3D(nn.Module):
                 continue
             s_dict[corresp_name[name]] = p_dict[name]
         self.load_state_dict(s_dict)
+        '''
 
 
     def __init_weight(self):
@@ -161,7 +163,6 @@ def get_10x_lr_params(model):
 if __name__ == "__main__":
 
     inputs = torch.rand(1, 3, 16, 112, 112)
-    net = C3D(num_classes=101, pretrained=True)
-
+    net = C3D(num_classes=2, pretrained=False)
     outputs = net.forward(inputs)
     print(outputs.size())
